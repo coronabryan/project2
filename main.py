@@ -72,7 +72,7 @@ def do_shift(stack, top, current, action_out):
         pushed = current
         stack.append(current)
     stack.append(int(LR_TABLE[top][current][1:]))
-    action_out.append('Push(' + pushed + ')' + ' Pushed(' + LR_TABLE[top][current][1:] + ')')
+    action_out.append('Push(' + pushed + ')' + ' Push(' + LR_TABLE[top][current][1:] + ')')
 
 
 def do_reduce(stack, action_out):
@@ -81,13 +81,9 @@ def do_reduce(stack, action_out):
     third = stack[-1]
     print(first, second, third)
     if second == 'T' and 'E' in LR_TABLE[third]:
-        stack.append('E')
-        stack.append(LR_TABLE[third]['E'])
-        action_out.append('E -> T; Table[' + str(third) + ', E] = ' + str(LR_TABLE[third]['E']))
+        reduce_action('E', 'E -> T', stack, third, action_out)
     elif second == 'F' and 'T' in LR_TABLE[third]:
-        stack.append('T')
-        stack.append(LR_TABLE[third]['T'])
-        action_out.append('T -> F; Table[' + str(third) + ', T] = ' + str(LR_TABLE[third]['T']))
+        reduce_action('T', 'T -> F', stack, third, action_out)
     elif second == 'T' or second == 'F' or second == ')':
         temp = []
         find_similar_grammar(stack, temp, second, action_out)
@@ -95,10 +91,14 @@ def do_reduce(stack, action_out):
             print('ERROR: Input not accepted. No Grammar works for this input.')
             return False
     elif second == 'id' or second.isalpha():
-        stack.append('F')
-        stack.append(LR_TABLE[third]['F'])
-        action_out.append('F -> id; Table[' + str(third) + ', F] = ' + str(LR_TABLE[third]['F']))
+        reduce_action('F', 'F -> id', stack, third, action_out)
     return True
+
+
+def reduce_action(letter, grammar, stack, index, action_out):
+    stack.append(letter)
+    stack.append(LR_TABLE[index][letter])
+    action_out.append(grammar + '; Table[' + str(index) + ', ' + letter + '] = ' + str(LR_TABLE[index][letter]))
 
 
 def find_similar_grammar(stack, temp, second, action_out):
@@ -106,19 +106,13 @@ def find_similar_grammar(stack, temp, second, action_out):
         temp.append(stack.pop())
         index = stack[-1]
         if second == 'T' and temp[-1] == 'E' and '+' in temp:
-            stack.append('E')
-            stack.append(LR_TABLE[index]['E'])
-            action_out.append('E -> E + T; Table[' + str(index) + ', E] = ' + str(LR_TABLE[index]['E']))
+            reduce_action('E', 'E -> E + T', stack, index, action_out)
             break
         if second == 'F' and temp[-1] == 'T' and '*' in temp:
-            stack.append('T')
-            stack.append(LR_TABLE[index]['T'])
-            action_out.append('T -> T * F; Table[' + str(index) + ', T] = ' + str(LR_TABLE[index]['T']))
+            reduce_action('T', 'T -> T * F', stack, index, action_out)
             break
         if second == ')' and temp[-1] == '(' and 'E' in temp:
-            stack.append('F')
-            stack.append(LR_TABLE[index]['F'])
-            action_out.append('F -> (E); Table[' + str(index) + ', F] = ' + str(LR_TABLE[index]['F']))
+            reduce_action('F', 'F -> (E)', stack, index, action_out)
             break
 
 
