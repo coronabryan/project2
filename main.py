@@ -13,6 +13,7 @@ LR_TABLE = [
     {'+': 'r5', '*': 'r5', ')': 'r5', '$': 'r5'}  # 11
 ]
 
+
 def syntactic_analysis():
     step_out = []
     stack_out = []
