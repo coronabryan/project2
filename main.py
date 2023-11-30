@@ -1,17 +1,17 @@
-LR_TABLE = [{'id': 's5', '(': 's4', 'E': 1, 'T': 2, 'F': 3}, # 0
-            {'+': 's6', '$': 'acc'}, # 1
-            {'+': 'r2', '*': 's7', ')': 'r2', '$': 'r2'}, # 2
-            {'+': 'r4', '*': 'r4', ')': 'r4', '$': 'r4'}, # 3
-            {'id': 's5', '(': 's4', 'E': 8, 'T': 2, 'F': 3}, # 4
-            {'+': 'r6', '*': 'r6', ')': 'r6', '$': 'r6'}, # 5
-            {'id': 's5', '(': 's4', 'T': 9, 'F': 3}, # 6
-            {'id': 's5', '(': 's4', 'F': 10}, # 7
-            {'+': 's6', ')': 's11'}, # 8
-            {'+': 'r1', '*': 's7', ')': 'r1', '$': 'r1'}, # 9
-            {'+': 'r3', '*': 'r3', ')': 'r3', '$': 'r3'}, # 10
-            {'+': 'r5', '*': 'r5', ')': 'r5', '$': 'r5'}
-            ]
-
+LR_TABLE = [
+    {'id': 's5', '(': 's4', 'E': 1, 'T': 2, 'F': 3},  # 0
+    {'+': 's6', '$': 'acc'},  # 1
+    {'+': 'r2', '*': 's7', ')': 'r2', '$': 'r2'},  # 2
+    {'+': 'r4', '*': 'r4', ')': 'r4', '$': 'r4'},  # 3
+    {'id': 's5', '(': 's4', 'E': 8, 'T': 2, 'F': 3},  # 4
+    {'+': 'r6', '*': 'r6', ')': 'r6', '$': 'r6'},  # 5
+    {'id': 's5', '(': 's4', 'T': 9, 'F': 3},  # 6
+    {'id': 's5', '(': 's4', 'F': 10},  # 7
+    {'+': 's6', ')': 's11'},  # 8
+    {'+': 'r1', '*': 's7', ')': 'r1', '$': 'r1'},  # 9
+    {'+': 'r3', '*': 'r3', ')': 'r3', '$': 'r3'},  # 10
+    {'+': 'r5', '*': 'r5', ')': 'r5', '$': 'r5'}  # 11
+]
 
 def syntactic_analysis():
     step_out = []
@@ -24,10 +24,13 @@ def syntactic_analysis():
         input += '$'
     i = 0
     res = calculate_action(stack, i, input, step_out, stack_out, input_out, action_out)
-    print('Steps: ', step_out)
-    print('Stack: ', stack_out)
-    print('Input: ', input_out)
-    print('Action: ', action_out)
+
+    # Formatting the output
+    print("{:<10} | {:<30} | {:<20} | {:<30}".format('Step', 'Stack', 'Input', 'Action'))
+    print("-"*100)
+    for step, stack, inp, action in zip(step_out, stack_out, input_out, action_out):
+        print("{:<10} | {:<30} | {:<20} | {:<30}".format(step, str(stack), inp, action))
+
     return res
 
 
