@@ -20,8 +20,8 @@ def syntactic_analysis():
     input_out = []
     action_out = []
     stack = [0]
-    input = '(id+id)*id$'
-    if input[-1] != '$':
+    input = '(id*)$'
+    if input and input[-1] != '$':
         input += '$'
     i = 0
     res = calculate_action(stack, i, input, step_out, stack_out, input_out, action_out)
@@ -55,12 +55,16 @@ def calculate_action(stack, i, input, step_out, stack_out, input_out, action_out
                     if not result:
                         return False
                 elif LR_TABLE[top][current] == 'acc':
+                    action_out.append('acc')
                     print('Input accepted')
                     return True
                 else:
+                    action_out.append('ERROR')
                     print('ERROR: Input not accepted. Path not available in table')
                     return False
             else:
+                step_out.append('N/A')
+                action_out.append('ERROR')
                 print('ERROR: Input not accepted. Not enough information on Table')
                 return False
         else:
@@ -92,6 +96,7 @@ def do_reduce(stack, action_out):
         temp = []
         find_similar_grammar(stack, temp, second, action_out)
         if not stack:
+            action_out.append('ERROR')
             print('ERROR: Input not accepted. No Grammar works for this input.')
             return False
     elif second == 'id' or second.isalpha():
